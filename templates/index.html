@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: white;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IP Tracker</h1>
+        <input type="text" id="ipAddress" placeholder="Enter IP Address">
+        <button onclick="trackIP()">Track IP</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function trackIP() {
+            const ip = document.getElementById('ipAddress').value;
+            if (ip) {
+                fetch(`/track?ip=${ip}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            document.getElementById('result').innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+                        } else {
+                            document.getElementById('result').innerHTML = `
+                                <p>IP: ${data.IP}</p>
+                                <p>Location: ${data.location}</p>
+                                <p>Country: ${data.country}</p>
+                                <p>ISP: ${data.ISP}</p>
+                                <p>Time Zone: ${data.TimeZone}</p>
+                                <p>Latitude: ${data.Latitude}</p>
+                                <p>Longitude: ${data.Longitude}</p>
+                            `;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('result').innerHTML = '<p style="color: red;">Unable to track IP</p>';
+                    });
+            } else {
+                alert('Please enter an IP address.');
+            }
+        }
+    </script>
+</body>
+</html>
